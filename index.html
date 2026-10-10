@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Excel-ի ուղեցույց սկսնակների համար</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;600;800&family=Noto+Serif+Armenian:wght@600;800&display=swap">
+<style>
+:root{--bg:#f6f8f9;--ink:#13233a;--mute:#5a6b7d;--line:#cfd8df;--acc:#17724a;--acc2:#e3f3ea;--sel:#ffe27a;--panel:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1720;--ink:#e6edf3;--mute:#93a4b5;--line:#2a3846;--acc:#4fc08a;--acc2:#16301f;--sel:#6b5a12;--panel:#16212c}}
+:root[data-theme="dark"]{--bg:#0f1720;--ink:#e6edf3;--mute:#93a4b5;--line:#2a3846;--acc:#4fc08a;--acc2:#16301f;--sel:#6b5a12;--panel:#16212c}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.7 "Noto Sans Armenian",system-ui,sans-serif}
+h1,h2{font-family:"Noto Serif Armenian",Georgia,serif;line-height:1.25;margin:0}
+a{color:var(--acc)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:12px;align-items:center}
+.top b{white-space:nowrap}
+.bar{flex:1;height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .3s}
+.top span{font-size:14px;color:var(--mute);white-space:nowrap}
+.wrap{display:grid;grid-template-columns:240px minmax(0,1fr);max-width:1100px;margin:0 auto;gap:32px;padding:0 16px}
+nav{position:sticky;top:calc(env(safe-area-inset-top,0px) + 62px);align-self:start;padding:24px 0;font-size:15px}
+nav a{display:block;padding:6px 10px;text-decoration:none;color:var(--mute);border-left:3px solid var(--line)}
+nav a.done{color:var(--ink);border-color:var(--acc)}
+nav a:hover{color:var(--acc)}
+main{padding-bottom:80px;min-width:0}
+.hero{padding:48px 0 24px}
+.hero h1{font-size:clamp(30px,5vw,48px);font-weight:800}
+.hero p{max-width:60ch;color:var(--mute);font-size:19px}
+.sheet{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:24px 0}
+.fx{display:flex;border-bottom:1px solid var(--line);font-family:Consolas,Menlo,monospace;font-size:15px}
+.fx em{font-style:normal;padding:6px 12px;border-right:1px solid var(--line);min-width:52px;text-align:center;background:var(--acc2);color:var(--acc);font-weight:700}
+.fx output{padding:6px 12px;flex:1;min-height:36px;overflow-x:auto;white-space:nowrap}
+.gridw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:480px;font-size:15px}
+th{background:var(--acc2);color:var(--mute);font-weight:600;border:1px solid var(--line);padding:4px;width:25%}
+th.r{width:34px}
+td{border:1px solid var(--line);padding:0;height:38px}
+td input{width:100%;height:100%;border:0;background:transparent;color:inherit;font:inherit;padding:6px 10px;outline:none}
+td.sel{outline:2px solid var(--acc);outline-offset:-2px;background:var(--sel)}
+td.err input{color:#c0392b}
+.hint{font-size:14px;color:var(--mute);padding:8px 12px;border-top:1px solid var(--line);margin:0}
+section.l{padding:36px 0 8px;border-top:1px solid var(--line);margin-top:28px}
+section.l h2{font-size:clamp(22px,3.2vw,30px)}
+section.l h2 small{display:block;font:600 14px "Noto Sans Armenian",sans-serif;color:var(--acc);margin-bottom:6px}
+code,.ex{font-family:Consolas,Menlo,monospace}
+code{background:var(--acc2);color:var(--acc);padding:1px 6px;border-radius:3px;font-size:.92em}
+.ex{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--acc);padding:10px 14px;margin:10px 0;font-size:15px;overflow-x:auto;white-space:pre}
+.tip{background:var(--acc2);padding:10px 14px;border-radius:4px;margin:14px 0;font-size:16px}
+label.ck{display:inline-flex;gap:10px;align-items:center;margin-top:12px;font-weight:600;cursor:pointer}
+label.ck input{width:20px;height:20px;accent-color:var(--acc)}
+.tw{overflow-x:auto}
+.k td,.k th{padding:8px 12px;height:auto;text-align:left;width:auto}
+button{font:inherit;cursor:pointer}
+.theme{margin-left:auto;background:none;border:1px solid var(--line);color:var(--ink);border-radius:4px;padding:2px 10px}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+@media (max-width:820px){.wrap{display:block}nav{position:static;display:flex;overflow-x:auto;gap:4px;padding:12px 0}nav a{white-space:nowrap;border-left:0;border-bottom:3px solid var(--line)}nav a.done{border-color:var(--acc)}.top span{display:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar i{transition:none}}
+.hero{position:relative;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0 -16px;z-index:-1;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:38px 38px;-webkit-mask-image:linear-gradient(#000,transparent 85%);mask-image:linear-gradient(#000,transparent 85%);opacity:.55;animation:pan 40s linear infinite}
+@keyframes pan{to{background-position:380px 380px}}
+.hero h1{animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+.hero p{animation:rise .9s .15s cubic-bezier(.2,.7,.2,1) both}
+.sheet{animation:rise .9s .3s cubic-bezier(.2,.7,.2,1) both;box-shadow:0 18px 40px -22px rgba(19,35,58,.45)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+td.fl input{animation:fl 1s}
+@keyframes fl{from{background:var(--sel)}}
+.k tr:hover td{background:var(--acc2)}
+.k th{text-align:left}
+nav a{transition:padding .2s,color .2s}nav a:hover{padding-left:16px}
+@media (prefers-reduced-motion:reduce){.hero::before,.hero h1,.hero p,.sheet,td.fl input{animation:none}.rv{opacity:1;transform:none;transition:none}}
+body{background-image:linear-gradient(color-mix(in srgb,var(--line) 55%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--line) 55%,transparent) 1px,transparent 1px);background-size:44px 44px;background-attachment:fixed}
+.top{background:#0f3d2b;color:#fff;border:0}.top span{color:#bfe3d0}.top .bar{background:#ffffff33}.top .bar i{background:#7fe0ad}.top .theme{color:#fff;border-color:#ffffff66}
+.wrap{display:block;max-width:900px}
+main{background:var(--bg);padding:8px 32px 120px;box-shadow:0 0 0 1px var(--line),0 30px 60px -30px rgba(0,0,0,.35);min-height:100vh}
+@media (max-width:820px){main{padding:8px 16px 120px}}
+.hero{padding:56px 0 16px}.hero h1{font-size:clamp(34px,6vw,58px);font-weight:800;letter-spacing:-.01em}
+section.l{display:none;border:0;margin:0;padding:36px 0 8px}section.l.on{display:block;animation:rise .5s both}
+section.l h2{font-size:clamp(28px,4.6vw,44px)}section.l h2 small{font-size:15px}
+section.l p{font-size:18px;max-width:68ch}
+nav{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:6;display:flex;overflow-x:auto;background:var(--acc2);border-top:2px solid var(--acc);padding:0 8px env(safe-area-inset-bottom,0px);font-size:14px}
+nav a{border:0;border-right:1px solid var(--line);padding:11px 16px;white-space:nowrap;color:var(--mute)}
+nav a.done{color:var(--mute);border-color:var(--line)}nav a.done::after{content:"✓";color:var(--acc);margin-left:6px}
+nav a.cur{background:var(--bg);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--acc)}
+.ih{font-size:28px;margin:28px 0 12px}.ix td:first-child{width:46px;text-align:center;color:var(--mute);background:var(--acc2)}.ix a{font-weight:600;text-decoration:none}.ix a:hover{text-decoration:underline}
+.btn{display:inline-block;background:var(--acc);color:#fff;padding:12px 24px;border-radius:4px;text-decoration:none;font-weight:600;margin-top:8px}
+.pn{display:flex;justify-content:space-between;gap:12px;margin-top:36px;padding-top:18px;border-top:1px solid var(--line)}.pn a{flex:1;max-width:48%;padding:10px 14px;border:1px solid var(--line);border-radius:4px;color:var(--ink);text-decoration:none;font-weight:600}.pn a:last-child{text-align:right}.pn small{display:block;color:var(--acc);font-weight:400;font-size:13px}.pn a:hover{border-color:var(--acc);background:var(--acc2)}
+@media (prefers-reduced-motion:reduce){section.l.on{animation:none}}
+.qq{font-size:clamp(20px,3.4vw,28px)!important}.qo{display:grid;gap:10px;margin:22px 0}.qo button{text-align:left;padding:14px 16px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:4px;font:inherit;transition:background .2s,border-color .2s}.qo button:hover{border-color:var(--acc);background:var(--acc2)}.qo .ok{background:var(--acc)!important;color:#fff;border-color:var(--acc)}.qo .bad{background:#c0392b!important;color:#fff;border-color:#c0392b}.qo .ok::after{content:' ✓'}.qo .bad::after{content:' ✗'}button.btn{border:0}#quiz ol{padding-left:22px}#quiz li{margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="top"><b>Excel</b><div class="bar" role="progressbar" aria-label="Առաջընթաց"><i id="pb"></i></div><span id="pt"></span><button class="theme" id="th" aria-label="Փոխել թեման">◐</button></div>
+<div class="wrap">
+<nav id="nav" aria-label="Դասեր"></nav>
+<main>
+<header class="hero">
+<h1>Սովորիր Excel-ը զրոյից՝ քայլ առ քայլ</h1>
+<p>Տասներկու դաս՝ առանց նախնական գիտելիքի, յուրաքանչյուրը առանձին էջում։ Սկսիր ստորև բերված աղյուսակից. սեղմիր ցանկացած բջիջ, փոխիր թվերը և տես, թե ինչպես են բանաձևերն ինքնուրույն թարմացվում։</p>
+<div class="sheet">
+<div class="fx"><em id="ref">A1</em><output id="fx"></output></div>
+<div class="gridw"><table id="g"></table></div>
+<p class="hint">Փորձիր՝ փոխիր B2-ի գինը, կամ D6 բջիջում գրիր <code>=AVERAGE(D2:D4)</code>։ Աջակցվում են՝ SUM, AVERAGE, MIN, MAX, COUNT, IF։</p>
+</div>
+</header>
+<div id="idx"></div><div id="lessons"></div>
+<section class="l" id="quiz"></section>
+<section class="l" id="fn">
+<h2><small>Տեղեկատու</small>Ֆունկցիաների աղյուսակ</h2>
+<div class="tw"><table class="k">
+<tr><th>Ֆունկցիա</th><th>Ինչ է անում</th><th>Օրինակ</th></tr>
+<tr><td><code>SUM</code></td><td>Գումարում է թվերը</td><td><code>=SUM(B2:B9)</code></td></tr>
+<tr><td><code>AVERAGE</code></td><td>Հաշվում է միջինը</td><td><code>=AVERAGE(B2:B9)</code></td></tr>
+<tr><td><code>COUNTA</code></td><td>Հաշվում է լցված բջիջները</td><td><code>=COUNTA(A2:A50)</code></td></tr>
+<tr><td><code>SUMIF</code></td><td>Գումարում է ըստ պայմանի</td><td><code>=SUMIF(A2:A50,"Հաց",D2:D50)</code></td></tr>
+<tr><td><code>COUNTIF</code></td><td>Հաշվում է ըստ պայմանի</td><td><code>=COUNTIF(A2:A50,"Հաց")</code></td></tr>
+<tr><td><code>ROUND</code></td><td>Կլորացնում է թիվը</td><td><code>=ROUND(A1,2)</code></td></tr>
+<tr><td><code>CONCAT</code></td><td>Միացնում է տեքստերը</td><td><code>=CONCAT(A1," ",B1)</code></td></tr>
+<tr><td><code>TODAY</code></td><td>Այսօրվա ամսաթիվը</td><td><code>=TODAY()</code></td></tr>
+<tr><td><code>IFERROR</code></td><td>Սխալի փոխարեն ցույց է տալիս քո արժեքը</td><td><code>=IFERROR(A1/B1,0)</code></td></tr>
+</table></div>
+</section>
+<section class="l" id="err">
+<h2><small>Տեղեկատու</small>Ինչ նշանակում են սխալները</h2>
+<div class="tw"><table class="k">
+<tr><th>Սխալ</th><th>Պատճառը</th><th>Ինչ անել</th></tr>
+<tr><td><code>#DIV/0!</code></td><td>Բաժանում զրոյի վրա</td><td>Ստուգիր հայտարարը կամ օգտագործիր IFERROR</td></tr>
+<tr><td><code>#NAME?</code></td><td>Ֆունկցիայի անունը սխալ է գրված</td><td>Ուղղիր անվանումը</td></tr>
+<tr><td><code>#VALUE!</code></td><td>Թվի փոխարեն տեքստ կա</td><td>Ստուգիր բջիջների պարունակությունը</td></tr>
+<tr><td><code>#REF!</code></td><td>Հղվող բջիջը ջնջվել է</td><td>Սեղմիր Ctrl+Z կամ վերականգնիր հղումը</td></tr>
+<tr><td><code>#N/A</code></td><td>Որոնվող արժեքը չի գտնվել</td><td>Ստուգիր գրությունը և ավելորդ բացատները</td></tr>
+<tr><td><code>#####</code></td><td>Սյունակը շատ նեղ է</td><td>Լայնացրու սյունակը</td></tr>
+</table></div>
+</section>
+<section class="l" id="keys">
+<h2><small>Հավելված</small>Օգտակար ստեղնային համակցություններ</h2>
+<div class="tw"><table class="k">
+<tr><th>Գործողություն</th><th>Windows</th><th>Mac</th></tr>
+<tr><td>Պատճենել / Տեղադրել</td><td>Ctrl+C / Ctrl+V</td><td>⌘C / ⌘V</td></tr>
+<tr><td>Հետ բերել</td><td>Ctrl+Z</td><td>⌘Z</td></tr>
+<tr><td>Ընտրել ամբողջ աղյուսակը</td><td>Ctrl+A</td><td>⌘A</td></tr>
+<tr><td>Ավտոգումար</td><td>Alt+=</td><td>⌘⇧T</td></tr>
+<tr><td>Խմբագրել բջիջը</td><td>F2</td><td>Ctrl+U</td></tr>
+<tr><td>Անցնել տվյալների ծայրը</td><td>Ctrl+սլաք</td><td>⌘+սլաք</td></tr>
+<tr><td>Փոխել հղման տեսակը (<code>$</code>)</td><td>F4</td><td>⌘T</td></tr>
+<tr><td>Պահպանել</td><td>Ctrl+S</td><td>⌘S</td></tr>
+</table></div>
+</section>
+</main>
+</div>
+<script>
+const L=[
+{t:"Ծանոթություն միջերեսին",p:["Excel-ի ֆայլը կոչվում է <b>աշխատանքային գիրք</b>, որի մեջ կան <b>թերթեր</b> (ներքևում)։ Յուրաքանչյուր թերթ աղյուսակ է՝ <b>սյունակներից</b> (A, B, C…) և <b>տողերից</b> (1, 2, 3…)։","Սյունակի և տողի հատման կետը <b>բջիջ</b> է։ Նրա անունը հասցեն է՝ օրինակ <code>B3</code>՝ B սյունակ, 3-րդ տող։ Վերևի <b>բանաձևերի տողում</b> երևում է ընտրված բջիջի իրական պարունակությունը։","Վերևի <b>ժապավենը</b> (Ribbon) բաժանված է ներդիրների՝ Գլխավոր, Տեղադրում, Բանաձևեր, Տվյալներ։ Հիմնական գործիքների մեծ մասը գտնվում է «Գլխավոր» ներդիրում։"]},
+{t:"Տվյալների մուտք և ընտրություն",p:["Սեղմիր բջջի վրա և սկսիր գրել։ <b>Enter</b>-ը հաստատում է և իջնում ներքև, <b>Tab</b>-ը՝ աջ, <b>Esc</b>-ը չեղարկում է։ Գոյություն ունեցող բջիջը խմբագրելու համար սեղմիր <b>F2</b> կամ կրկնակի սեղմիր վրան։","Թվերը ձախից աջ հավասարվում են աջ, տեքստը՝ ձախ։ Եթե թիվը հայտնվում է ձախ կողմում, հավանաբար Excel-ը այն տեքստ է համարում։","Միջակայք ընտրելու համար քաշիր մկնիկը կամ պահիր <b>Shift</b>-ը։ Ոչ հարևան բջիջների համար պահիր <b>Ctrl</b>-ը։ Բջջի անկյունի փոքր քառակուսին քաշելով կարող ես ավտոմատ շարունակել շարքը (1, 2, 3… կամ Երկ, Երք, Չրք…)։"]},
+{t:"Առաջին բանաձևերը",p:["Ցանկացած բանաձև սկսվում է <b>հավասարման նշանով</b>։ Առանց դրա Excel-ը գրածդ տեքստ է համարում։","Բանաձևում օգտագործիր բջիջների հասցեները, ոչ թե թվերը։ Այդ դեպքում արդյունքը ինքնուրույն կթարմացվի, երբ տվյալը փոխվի։"],f:["=A1+B1    գումարում","=A1-B1    հանում","=A1*B1    բազմապատկում","=A1/B1    բաժանում","=A1^2     աստիճան","=(A1+B1)*C1   փակագծերը փոխում են հերթականությունը"],tip:"Գործողությունների հերթականությունը նույնն է, ինչ մաթեմատիկայում․ նախ փակագծերը, հետո աստիճանը, հետո × ու ÷, վերջում + ու −։"},
+{t:"Հիմնական ֆունկցիաները",p:["<b>Ֆունկցիան</b> պատրաստի բանաձև է։ Այն գրվում է անունով, իսկ փակագծերում նշվում է միջակայքը։ <code>A1:A10</code>-ը նշանակում է «A1-ից մինչև A10»։"],f:["=SUM(A1:A10)        գումար","=AVERAGE(A1:A10)    միջին","=MIN(A1:A10)        ամենափոքրը","=MAX(A1:A10)        ամենամեծը","=COUNT(A1:A10)      թվեր պարունակող բջիջների քանակը","=IF(A1>=50,\"Անցավ\",\"Չանցավ\")    պայման"],tip:"Գումարն արագ ստանալու համար ընտրիր թվերի տակի բջիջը և սեղմիր Alt+=։ Excel-ը ինքը կառաջարկի SUM։"},
+{t:"Հղումներ․ հարաբերական և բացարձակ",p:["Երբ բանաձևը պատճենում ես մեկ տող ներքև, <code>A1</code> հղումը դառնում է <code>A2</code>։ Սա <b>հարաբերական հղում</b> է և սովորաբար հենց դա է պետք։","Եթե հղումը պետք է մնա անփոփոխ (օրինակ՝ ԱԱՀ-ի տոկոսը մեկ բջիջում), դիր <code>$</code> նշանը՝ <code>$B$1</code>։ Սա <b>բացարձակ հղում</b> է։ Ընտրիր հղումը բանաձևում և սեղմիր F4՝ նշանները ավտոմատ դնելու համար։"],f:["=B2*$F$1    B2-ը փոխվում է պատճենելիս, F1-ը՝ ոչ"]},
+{t:"Ձևաչափում",p:["Ձևաչափումը չի փոխում արժեքը, միայն տեսքը։ «Գլխավոր» ներդիրում կարող ես փոխել տառատեսակը, գույնը, սահմանները և հավասարեցումը։","Կարևոր է <b>թվի ձևաչափը</b>․ արժույթ, տոկոս, ամսաթիվ։ Օրինակ՝ 0.2-ը տոկոսի ձևաչափով երևում է որպես 20%։ Սյունակի լայնությունը ավտոմատ ճշգրտելու համար կրկնակի սեղմիր սյունակների վերնագրերի միջև եղած գծի վրա։","<b>Պայմանական ձևաչափումը</b> (Գլխավոր → Conditional Formatting) ավտոմատ ներկում է բջիջները՝ օրինակ կարմիր՝ սահմանից ցածր արժեքների համար։"]},
+{t:"Տեսակավորում և զտում",p:["Ընտրիր աղյուսակի որևէ բջիջ, հետո «Տվյալներ» ներդիրում սեղմիր <b>Sort</b>՝ տեսակավորելու համար (փոքրից մեծ, A-ից Z)։ Excel-ը ամբողջ տողը տեղափոխում է միասին։","<b>Filter</b>-ը վերնագրերին ավելացնում է սլաքներ, որոնցով ցույց ես տալիս միայն քեզ պետք տողերը։ Մյուսները չեն ջնջվում, միայն թաքցվում են։"],tip:"Աղյուսակի առաջին տողը պետք է լինի վերնագրերով, և ներսում չպետք է լինեն դատարկ տողեր, այլապես Excel-ը կկանգնի տվյալների ծայրին։"},
+{t:"Գծապատկերներ",p:["Ընտրիր տվյալները (վերնագրերով հանդերձ), հետո «Տեղադրում» → <b>Charts</b>։ «Recommended Charts»-ը կառաջարկի հարմար տեսակը։","Ընտրիր տեսակը ըստ նպատակի․ <b>սյունակային</b>՝ արժեքները համեմատելու, <b>գծային</b>՝ ժամանակի ընթացքում փոփոխությունը ցույց տալու, <b>շրջանային</b>՝ մասերը ամբողջի մեջ (առավելագույնը 5 կտոր)։","Չմոռանաս նշել վերնագիր և առանցքների անուններ. առանց դրանց գծապատկերը անհասկանալի է։"]},
+{t:"Որոնում․ VLOOKUP և XLOOKUP",p:["Երբ մեկ աղյուսակից պետք է հանել տվյալ ըստ բանալու (օրինակ՝ ապրանքի կոդով գինը), օգտագործիր որոնման ֆունկցիա։","<b>XLOOKUP</b>-ը նոր ու հարմար տարբերակն է (Excel 2021 և Microsoft 365)։ <b>VLOOKUP</b>-ը աշխատում է բոլոր տարբերակներում, բայց միայն որոնվող սյունակից դեպի աջ։"],f:["=XLOOKUP(E2, A2:A100, C2:C100)       գտիր E2-ը A սյունակում, տուր C-ից","=VLOOKUP(E2, A2:C100, 3, FALSE)       FALSE = ճշգրիտ համընկնում"],tip:"VLOOKUP-ում վերջին արգումենտը գրիր FALSE։ Առանց դրա Excel-ը կարող է վերադարձնել սխալ, մոտավոր արդյունք։"},
+{t:"Առանցքային աղյուսակ (PivotTable)",p:["Սա Excel-ի ամենահզոր գործիքներից է։ Հազար տողանոց տվյալները այն ընդհանրացնում է րոպեների ընթացքում՝ առանց մեկ բանաձև գրելու։","Աղյուսակում ընտրիր բջիջ, հետո «Տեղադրում» → <b>PivotTable</b>։ Դաշտերը քաշիր չորս տարածքների մեջ․ <b>Rows</b> (խմբավորման հիմք), <b>Columns</b>, <b>Values</b> (ինչ հաշվել՝ գումար, քանակ, միջին) և <b>Filters</b>։","Օրինակ՝ «Ամիս» դաշտը Rows-ում և «Վաճառք»-ը Values-ում կտա վաճառքի գումարը ամիսներով։ Տվյալները փոխելուց հետո սեղմիր <b>Refresh</b>։"]},
+{t:"SUMIF և COUNTIF՝ հաշվարկ ըստ պայմանի",p:["Երբեմն պետք է գումարել կամ հաշվել ոչ թե ամեն ինչ, այլ միայն որոշ տողեր, օրինակ՝ միայն «Հաց»-ի վաճառքը։","SUMIF-ը ստուգում է մեկ սյունակը և գումարում մյուսը, իսկ COUNTIF-ը հաշվում է համապատասխան տողերը։"],f:["=SUMIF(A2:A50,\"Հաց\",D2:D50)   Հացի գումարների գումարը","=COUNTIF(A2:A50,\"Հաց\")        քանի անգամ է հանդիպում «Հաց»-ը","=COUNTIF(B2:B50,\">1000\")      1000-ից մեծ գները"],tip:"Պայմանը միշտ գրվում է չակերտների մեջ, իսկ համեմատման նշանը՝ դրանց ներսում (\">1000\")։"},
+{t:"Տեքստ և ամսաթվեր",p:["Excel-ը ամսաթիվը պահում է որպես թիվ։ Դրա շնորհիվ կարող ես հանել երկու ամսաթվերը և իմանալ օրերի քանակը։","Տեքստերը կարելի է միացնել, կտրել և մաքրել հատուկ ֆունկցիաներով։"],f:["=TODAY()                  այսօրվա ամսաթիվը","=B2-A2                    օրերի տարբերությունը","=CONCAT(A2,\" \",B2)        անուն և ազգանուն մեկ բջիջում","=LEFT(A2,3)               առաջին 3 նիշը","=TRIM(A2)                 ջնջում է ավելորդ բացատները"],tip:"Եթե ամսաթվի փոխարեն թիվ ես տեսնում (օրինակ՝ 45200), փոխիր բջջի ձևաչափը «Date»-ի։"}
+];
+const $=s=>document.querySelector(s);
+let done={};try{done=JSON.parse(localStorage.getItem("xl-done")||"{}")}catch(e){}
+function save(){try{localStorage.setItem("xl-done",JSON.stringify(done))}catch(e){}}
+function render(){
+ $("#nav").innerHTML=L.map((l,i)=>`<a href="#l${i}" class="${done[i]?'done':''}">${i+1}. ${l.t}</a>`).join("")+`<a href="#fn">Ֆունկցիաների աղյուսակ</a><a href="#err">Սխալներ</a><a href="#keys">Ստեղնային համակցություններ</a>`;
+ const n=Object.values(done).filter(Boolean).length;
+ $("#pb").style.width=n/L.length*100+"%";$("#pt").textContent=n+" / "+L.length+" դաս";
+ $(".bar").setAttribute("aria-valuenow",Math.round(n/L.length*100));
+}
+$("#lessons").innerHTML=L.map((l,i)=>`<section class="l" id="l${i}"><h2><small>Դաս ${i+1}</small>${l.t}</h2>${l.p.map(x=>`<p>${x}</p>`).join("")}${l.f?`<div class="ex">${l.f.join("\n").replace(/</g,"&lt;")}</div>`:""}${l.tip?`<div class="tip"><b>Խորհուրդ․</b> ${l.tip}</div>`:""}<label class="ck"><input type="checkbox" data-i="${i}" ${done[i]?"checked":""}> Ավարտեցի այս դասը</label><div class="pn">${i>0?`<a href="#l${i-1}"><small>Նախորդ դաս</small>${L[i-1].t}</a>`:"<span></span>"}${i<L.length-1?`<a href="#l${i+1}"><small>Հաջորդ դաս</small>${L[i+1].t}</a>`:`<a href="#fn"><small>Շարունակիր</small>Ֆունկցիաների աղյուսակ</a>`}</div></section>`).join("");
+$("#lessons").addEventListener("change",e=>{const i=e.target.dataset.i;if(i!==undefined){done[i]=e.target.checked;save();render()}});
+render();
+$("#th").onclick=()=>{const r=document.documentElement,d=getComputedStyle(r).getPropertyValue("--bg").trim()==="#0f1720";r.dataset.theme=d?"light":"dark"};
+/* Mini spreadsheet */
+const COLS=["A","B","C","D"],ROWS=6;
+const data={A1:"Ապրանք",B1:"Գին",C1:"Քանակ",D1:"Գումար",A2:"Հաց",B2:"250",C2:"4",D2:"=B2*C2",A3:"Կաթ",B3:"480",C3:"2",D3:"=B3*C3",A4:"Պանիր",B4:"2100",C4:"1",D4:"=B4*C4",A5:"Ընդամենը",D5:"=SUM(D2:D4)"};
+const cv=(id,seen=[])=>{const raw=data[id];if(raw==null||raw==="")return 0;if(String(raw)[0]!=="=")return isNaN(raw)||raw.trim()===""?raw:Number(raw);if(seen.includes(id))throw 0;return ev(raw.slice(1),[...seen,id])};
+const rng=(a,b)=>{const m=x=>[x.charCodeAt(0)-65,+x.slice(1)],[c1,r1]=m(a),[c2,r2]=m(b),o=[];for(let c=Math.min(c1,c2);c<=Math.max(c1,c2);c++)for(let r=Math.min(r1,r2);r<=Math.max(r1,r2);r++)o.push(String.fromCharCode(65+c)+r);return o};
+function ev(src,seen){
+ const F={SUM:(...a)=>nums(a).reduce((x,y)=>x+y,0),AVERAGE:(...a)=>{a=nums(a);return a.reduce((x,y)=>x+y,0)/a.length},MIN:(...a)=>Math.min(...nums(a)),MAX:(...a)=>Math.max(...nums(a)),COUNT:(...a)=>nums(a).length,IF:(c,x,y)=>c?x:y};
+ const nums=a=>a.flat().filter(v=>typeof v==="number");
+ let s=src.toUpperCase().replace(/"([^"]*)"/g,(m)=>m).replace(/([A-D][1-6]):([A-D][1-6])/g,(m,a,b)=>`R("${a}","${b}")`).replace(/\b([A-D][1-6])\b(?!")/g,'C("$1")').replace(/\^/g,"**").replace(/<>/g,"!=").replace(/([^<>!=])=(?!=)/g,"$1==");
+ if(/[^A-Z0-9_().,"+\-*\/<>=!\s\u0531-\u0587]/.test(s.replace(/"[^"]*"/g,"")))throw 0;
+ const ids=s.replace(/"[^"]*"/g,"").match(/[A-Z_]+/g)||[];
+ if(ids.some(x=>x!=="C"&&x!=="R"&&!F[x]))throw 0;
+ const v=new Function("C","R",...Object.keys(F),"return "+s)(id=>cv(id,seen),(a,b)=>rng(a,b).map(i=>cv(i,seen)),...Object.values(F));
+ if(typeof v==="number"&&!isFinite(v))throw 0;return v;
+}
+function show(id){try{const v=cv(id);return typeof v==="number"?+v.toFixed(2):v}catch(e){return "#ՍԽԱԼ"}}
+const g=$("#g");
+g.innerHTML="<tr><th class='r'></th>"+COLS.map(c=>`<th>${c}</th>`).join("")+"</tr>"+Array.from({length:ROWS},(_,r)=>`<tr><th class="r">${r+1}</th>${COLS.map(c=>`<td data-id="${c}${r+1}"><input aria-label="${c}${r+1}" value=""></td>`).join("")}</tr>`).join("");
+const pv={};
+function paint(skip){g.querySelectorAll("td").forEach(td=>{const id=td.dataset.id,i=td.firstChild;if(i!==skip){const s=show(id);i.value=s===0&&!data[id]?"":s;td.classList.toggle("err",s==="#ՍԽԱԼ");if(pv[id]!==undefined&&pv[id]!==s){td.classList.remove("fl");void td.offsetWidth;td.classList.add("fl")}pv[id]=s}})}
+g.addEventListener("focusin",e=>{const td=e.target.closest("td");if(!td)return;g.querySelectorAll(".sel").forEach(x=>x.classList.remove("sel"));td.classList.add("sel");const id=td.dataset.id;$("#ref").textContent=id;$("#fx").textContent=data[id]||"";e.target.value=data[id]||"";e.target.select()});
+g.addEventListener("input",e=>{const id=e.target.closest("td").dataset.id;data[id]=e.target.value;$("#fx").textContent=e.target.value;paint(e.target)});
+g.addEventListener("focusout",e=>{paint()});
+g.addEventListener("keydown",e=>{if(e.key==="Enter"){const td=e.target.closest("td"),id=td.dataset.id,n=id[0]+(+id.slice(1)+1),nx=g.querySelector(`td[data-id="${n}"] input`);(nx||e.target).focus()}});
+paint();
+function render(){
+ const cur=location.hash.slice(1)||"home",n=Object.values(done).filter(Boolean).length;
+ const T=[["home","Գլխավոր"],...L.map((l,i)=>["l"+i,"Դաս "+(i+1)]),["fn","Ֆունկցիաներ"],["err","Սխալներ"],["keys","Ստեղներ"],["quiz","Քուիզ"]];
+ $("#nav").innerHTML=T.map(([h,t])=>`<a href="#${h==="home"?"":h}" class="${h===cur?"cur":""} ${h[0]==="l"&&done[h.slice(1)]?"done":""}">${t}</a>`).join("");
+ $("#idx").innerHTML=`<h2 class="ih">Դասացանկ</h2><div class="tw"><table class="k ix"><tr><th></th><th>Դաս</th><th>Կարգավիճակ</th></tr>${L.map((l,i)=>`<tr><td>${i+1}</td><td><a href="#l${i}">${l.t}</a></td><td>${done[i]?"Անցել ես ✓":"Սպասում է"}</td></tr>`).join("")}</table></div><a class="btn" href="#l0">Սկսել առաջին դասից</a> <a class="btn" href="#quiz">Ստուգիր գիտելիքդ՝ քուիզ</a>`;
+ $("#pb").style.width=n/L.length*100+"%";$("#pt").textContent=n+" / "+L.length+" դաս";
+ $(".bar").setAttribute("aria-valuenow",Math.round(n/L.length*100));
+}
+const Q=[
+['Ինչպես է կոչվում սյունակի և տողի հատման կետը Excel-ում։',['Բջիջ','Թերթ','Միջակայք','Ժապավեն'],0],
+['Ո՞ր ստեղնն է հաստատում մուտքը և իջնում հաջորդ տող։',['Tab','Enter','Esc','F2'],1],
+['Ինչով է սկսվում ցանկացած բանաձև։',['#','$','=','@'],2],
+['Ի՞նչ է նշանակում B3 հասցեն։',['B սյունակ, 3-րդ տող','3-րդ սյունակ, B տող','B և 3 թվերի գումարը','B-ից մինչև 3 միջակայքը'],0],
+['Ո՞ր ստեղնով ես խմբագրում բջջի պարունակությունը։',['F1','F4','Ctrl+E','F2'],3],
+['Ի՞նչ է անում =(A1+B1)*C1 բանաձևը։',['Նախ բազմապատկում է B1-ը C1-ով','Նախ գումարում է A1-ը և B1-ը, հետո բազմապատկում C1-ով','Միայն գումարում է A1-ը և B1-ը','Սխալ է'],1],
+['Ի՞նչ է հաշվում =SUM(A1:A10)-ը։',['A1-ից մինչև A10 բջիջների գումարը','Միայն A1-ի և A10-ի գումարը','A1-ի և 10-ի գումարը','A սյունակի միջինը'],0],
+['Ո՞ր ֆունկցիան է վերադարձնում ամենամեծ թիվը։',['MIN','COUNT','MAX','AVERAGE'],2],
+['Ի՞նչ է հաշվում COUNT ֆունկցիան։',['Բոլոր բջիջները','Միայն թվեր պարունակող բջիջները','Միայն տեքստը','Դատարկ բջիջները'],1],
+['Excel-ը ամսաթիվը պահում է որպես՝',['Պատկեր','Թիվ','Գույն','Սխալ'],1],
+['Ինչ հղում է $B$1-ը։',['Հարաբերական','Խառը','Բացարձակ','Սխալ'],2],
+['Ո՞ր ստեղնն է բանաձևում փոխում հղման տեսակը ($ նշանները)։',['F2','F4','F5','F12'],1],
+['Ձևաչափումը փոխում է՝',['Միայն տեսքը, ոչ արժեքը','Բջջի արժեքը','Բանաձևը','Բջջի հասցեն'],0],
+['Ո՞ր ներդիրում են Sort և Filter գործիքները։',['Գլխավոր','Տեղադրում','Տվյալներ','Բանաձևեր'],2],
+['Ի՞նչ է անում Filter-ը։',['Ջնջում է չհամապատասխան տողերը','Թաքցնում է չհամապատասխան տողերը՝ առանց ջնջելու','Տեսակավորում է թվերը','Միավորում է բջիջները'],1],
+['Ո՞ր գծապատկերն է հարմար ժամանակի ընթացքում փոփոխությունը ցույց տալու համար։',['Շրջանային','Սյունակային','Աղյուսակային','Գծային'],3],
+['VLOOKUP-ում ճշգրիտ համընկնման համար վերջին արգումենտը պետք է լինի՝',['FALSE','TRUE','ROUND','IF'],0],
+['Ինչի համար է առանցքային աղյուսակը (PivotTable)։',['Պատկեր նկարելու','Տեքստը ձևակերպելու','Մեծ տվյալները արագ ընդհանրացնելու','Ֆայլը պաշտպանելու'],2],
+['Ի՞նչ է հաշվում COUNTIF-ը։',['Բջիջները, որոնք համապատասխանում են պայմանին','Բոլոր բջիջների գումարը','Միայն դատարկ բջիջները','Ամենամեծ արժեքը'],0],
+['Ի՞նչ է նշանակում #DIV/0! սխալը։',['Ֆունկցիայի անունը սխալ է','Բաժանում է զրոյի վրա','Հղվող բջիջը ջնջվել է','Սյունակը նեղ է'],1]
+];
+let qi=0,sc=0,wr=[],lk=false,best=0;
+try{best=+localStorage.getItem('xl-best')||0}catch(e){}
+function qz(){qi=0;sc=0;wr=[];qs()}
+function qs(){
+ const el=$('#quiz');
+ if(qi>=Q.length){
+  best=Math.max(best,sc);try{localStorage.setItem('xl-best',best)}catch(e){}
+  const m=sc>=18?'Գերազանց։ Դու արդեն վստահ աշխատում ես Excel-ում։':sc>=14?'Լավ արդյունք։ Կրկնիր այն թեմաները, որտեղ սխալվեցիր։':sc>=10?'Հիմքը կա, բայց արժե նորից անցնել դասերը։':'Նորից անցիր դասերը և կրկին փորձիր. կստացվի։';
+  el.innerHTML=`<h2><small>Քուիզ</small>Արդյունքդ՝ ${sc} / ${Q.length}</h2><p>${m}</p><p>Լավագույն արդյունքդ՝ ${best} / ${Q.length}</p>${wr.length?`<h3>Սխալ պատասխանած հարցեր</h3><ol>${wr.map(i=>`<li>${Q[i][0]}<br><b>Ճիշտ պատասխանը՝</b> ${Q[i][1][Q[i][2]]}</li>`).join('')}</ol>`:''}<button class="btn" id="qr">Սկսել նորից</button>`;
+  $('#qr').onclick=qz;return}
+ const [q,o]=Q[qi];lk=false;
+ el.innerHTML=`<h2 class="qq"><small>Քուիզ · հարց ${qi+1} / ${Q.length}</small>${q}</h2><div class="qo">${o.map((t,i)=>`<button data-i="${i}">${t}</button>`).join('')}</div><p id="qf"></p>`;
+}
+$('#quiz').addEventListener('click',e=>{const b=e.target.closest('.qo button');if(!b||lk)return;lk=true;const i=+b.dataset.i,c=Q[qi][2];if(i===c)sc++;else{wr.push(qi);b.classList.add('bad')}b.parentNode.children[c].classList.add('ok');$('#qf').innerHTML=`<button class="btn" id="qn">${qi+1<Q.length?'Հաջորդ հարց':'Տեսնել արդյունքը'}</button>`;$('#qn').onclick=()=>{qi++;qs()}});
+function route(){const id=location.hash.slice(1)||"home";document.querySelectorAll("section.l").forEach(s=>s.classList.toggle("on",s.id===id));$(".hero").hidden=$("#idx").hidden=id!=="home";if(id==="quiz")qz();render();scrollTo(0,0);const c=$("#nav .cur");if(c)c.scrollIntoView({inline:"center",block:"nearest"})}
+addEventListener("hashchange",route);route();
+</script>
+</body>
+</html>
